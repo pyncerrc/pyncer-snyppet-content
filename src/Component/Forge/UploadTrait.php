@@ -23,15 +23,15 @@ trait UploadTrait
     use VolumeTrait;
 
     protected function uploadFile(
-        UploadedFileInterface|VolumeFile $file,
+        UploadedFileInterface $uploadedFile,
         DirType $dirType = DirType::FILE,
         array $params = [],
     ): ?VolumeFile
     {
         $volume = $this->getVolume($dirType, $params);
 
-        return $volume->writeFromUpload(
-            $file,
+        return $volume->writeFromUploadedFile(
+            $uploadedFile,
             $dirType,
             $params,
         );
@@ -50,7 +50,8 @@ trait UploadTrait
             $temporaryVolume,
             pyncer_io_filename($filename, true),
             $uri,
-            DirType::TEMPORARY
+            DirType::TEMPORARY,
+            $filename,
         );
 
         $volume = $this->getVolume($dirType, $params);
@@ -67,13 +68,40 @@ trait UploadTrait
         return $volumeFile;
     }
 
+    protected function hasUploadFromRequest(
+        string $key,
+        ?int $existingFileId,
+    ): bool
+    {
+        $files = $this->getRequest()->getUploadedFiles();
+
+        $file = $files[$key] ?? null;
+        if ($file !== null) {
+            return true;
+        }
+
+        $data = $this->parsedBody->getData();
+        $file = $data[$key] ?? null;;
+        if (!is_array($file)) {
+            $file = null;
+        }
+
+        if ($existingFileId !== null) {
+            $fileUri = $this->getContentUri($existingFileId);
+            if (($file['uri'] ?? null) === $fileUri) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected function uploadFromRequest(
         string $key,
         DirType $dirType = DirType::FILE,
         array $params = [],
     ): VolumeFile
     {
-        $data = $this->parsedBody->getData();
         $files = $this->getRequest()->getUploadedFiles();
 
         $file = $files[$key] ?? null;
@@ -95,6 +123,8 @@ trait UploadTrait
         }
 
         if ($dirType !== DirType::TEMPORARY) {
+            $data = $this->parsedBody->getData();
+
             $file = $data[$key] ?? null;
             if ($file !== null) {
                 $filename = $file['filename'] ?? null;

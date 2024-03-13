@@ -1,9 +1,11 @@
 <?php
 namespace Pyncer\Snyppet\Content\Table\Content;
 
-use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Data\Mapper\AbstractMapper;
 use Pyncer\Data\Model\ModelInterface;
+use Pyncer\Data\MapperQuery\MapperQueryInterface;
+use Pyncer\Snyppet\Content\Table\Content\ContentMapperQuery;
+use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 
 class ContentMapper extends AbstractMapper
 {
@@ -20,5 +22,10 @@ class ContentMapper extends AbstractMapper
     public function isValidModel(ModelInterface $model): bool
     {
         return ($model instanceof ContentModel);
+    }
+
+    public function isValidMapperQuery(MapperQueryInterface $mapperQuery): bool
+    {
+        return ($mapperQuery instanceof ContentMapperQuery);
     }
 }

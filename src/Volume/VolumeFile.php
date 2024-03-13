@@ -14,6 +14,7 @@ final readonly class VolumeFile
         protected string $name,
         protected string $uri,
         protected DirType $dirType = DirType::FILE,
+        protected ?string $filename = null,
     ) {}
 
     public function getVolume(): VolumeInterface
@@ -26,18 +27,37 @@ final readonly class VolumeFile
         return $this->name;
     }
 
+    public function withName(string $name): static
+    {
+        return new self(
+            $this->volume,
+            $name,
+            $this->uri,
+            $this->dirType,
+            $this->filename
+        );
+    }
+
     public function getUri(): string
     {
         return $this->uri;
     }
 
-    public function getFilename(bool $removeExtension): string
+    public function getFilename(bool $removeExtension = false): string
     {
+        if ($this->filename !== null) {
+            return pyncer_io_filename($this->filename, $removeExtension);
+        }
+
         return pyncer_io_filename($this->uri, $removeExtension);
     }
 
     public function getExtension(): ?string
     {
+        if ($this->filename !== null) {
+            return pyncer_io_extension($this->filename);
+        }
+
         return pyncer_io_extension($this->uri);
     }
 

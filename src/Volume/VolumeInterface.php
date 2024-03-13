@@ -20,7 +20,7 @@ interface VolumeInterface
         array $params = []
     ): VolumeFile;
 
-    public function writeFromUpload(
+    public function writeFromUploadedFile(
         UploadedFileInterface $uploadedFile,
         DirType $dirType = DirType::FILE,
         array $params = []

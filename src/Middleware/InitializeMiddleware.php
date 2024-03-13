@@ -23,7 +23,7 @@ class InitializeMiddleware implements MiddlewareInterface
 
     public function __construct(
         ?QueryParams $queryParams = null,
-        array $volumes = ['local'],
+        ?array $volumes = ['local'],
         string $defaultFileVolume = 'local',
         ?string $defaultCacheVolume = null,
         ?string $defaultTemporaryVolume = null,
@@ -45,11 +45,11 @@ class InitializeMiddleware implements MiddlewareInterface
         return $this;
     }
 
-    public function getVolumes(): array
+    public function getVolumes(): ?array
     {
         return $this->volumes;
     }
-    public function setVolumes(array $value): static
+    public function setVolumes(?array $value): static
     {
         $this->volumes = $value;
         return $this;

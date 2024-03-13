@@ -32,8 +32,40 @@ trait FileTrait
         $filename = pyncer_http_encode_uri_path($contentModel->getFilename());
         $extension = $contentModel->getExtension();
 
-        return $this->getBaseContentUri() . $path . $filename .
+        return $this->getBaseContentUri() . $path . '/' . $filename .
             ($extension ? '.' . $extension : '');
+    }
+
+    protected function getContentFile(?int $id): ?array
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        $contentDataTree = $this->get(ID::content());
+
+        if (!$contentDataTree->hasItem($id)) {
+            return null;
+        }
+
+        $contentModel = $contentDataTree->getItem($id);
+
+        $path = $contentDataTree->getAliasPath($contentModel->getParentId());
+        $filename = pyncer_http_encode_uri_path($contentModel->getFilename());
+        $extension = $contentModel->getExtension();
+
+        $uri = $this->getBaseContentUri() . $path . '/' . $filename .
+            ($extension ? '.' . $extension : '');
+
+        return [
+            'name' => $contentModel->getName(),
+            'uri' => $uri,
+            'filename' => $contentModel->getFilename() . (
+                $contentModel->getExtension() !== null ?
+                '.' . $contentModel->getExtension() :
+                ''
+            ),
+        ];
     }
 
     protected function getVolumeUri(?int $id): ?string
@@ -58,7 +90,12 @@ trait FileTrait
             $volume,
             $contentModel->getName(),
             $contentModel->getUri(),
-            DirType::FILE
+            DirType::FILE,
+            $contentModel->getFilename() . (
+                $contentModel->getExtension() !== null ?
+                '.' . $contentModel->getExtension() :
+                ''
+            )
         );
 
         return $volume->getUri($volumeFile);

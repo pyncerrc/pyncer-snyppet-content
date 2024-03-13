@@ -13,9 +13,8 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
     protected bool $includeValues = false;
 
     public function overrideModel(
-        ConnectionInterface $connection,
         ModelInterface $model,
-        array $data
+        array $data,
     ): ModelInterface
     {
         if ($this->includeData) {
@@ -42,7 +41,7 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
     protected function isValidFilter(
         string $left,
         mixed $right,
-        string $operator
+        string $operator,
     ): bool
     {
         if ($left === 'enabled' && is_bool($right) && $operator === '=') {
@@ -60,16 +59,15 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         return parent::isValidFilter($left, $right, $operator);
     }
 
-    protected function applyFilter(
+    /* protected function applyFilter(
         SelectQueryInterface $query,
         string $left,
         mixed $right,
         string $operator
     ): SelectQueryInterface
     {
-
-        return parent::isValidFilter($query, $left, $right, $operator);
-    }
+        return parent::applyFilter($query, $left, $right, $operator);
+    } */
 
     protected function isValidOption(string $option): bool
     {

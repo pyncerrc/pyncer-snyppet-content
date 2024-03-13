@@ -96,7 +96,7 @@ class Volume extends AbstractVolume
         return $volumeFile;
     }
 
-    public function writeFromUpload(
+    public function writeFromUploadedFile(
         UploadedFileInterface $uploadedFile,
         DirType $dirType = DirType::FILE,
         array $params = []
@@ -131,6 +131,7 @@ class Volume extends AbstractVolume
             $name,
             $uri,
             $dirType,
+            $filename,
         );
     }
 
@@ -170,6 +171,7 @@ class Volume extends AbstractVolume
             $name,
             $volumeFileUri,
             $dirType,
+            $filename,
         );
     }
 
@@ -203,6 +205,7 @@ class Volume extends AbstractVolume
             $name,
             $uri,
             $dirType,
+            $filename,
         );
     }
 
@@ -215,11 +218,11 @@ class Volume extends AbstractVolume
         $uri = $volumeFile->getVolume()->getUri($volumeFile);
 
         return $this->writeFromUri(
-            pyncer_io_filename($volumeFile->getName(), true),
+            $volumeFile->getFilename(),
             $uri,
             $dirType,
             $params,
-        );
+        )->withName($volumeFile->getName());
     }
 
     public function delete(VolumeFile $volumeFile): void

@@ -31,7 +31,7 @@ class ContentDataTree extends AbstractAliasTree
 
         $this->mapper = new ContentMapper($this->getConnection());
 
-        if ($queryParams === null || $queryParam->isEmpty()) {
+        if ($queryParams === null || $queryParams->isEmpty()) {
             $this->mapperQuery = null;
         } else {
             $mapperQuery = new ContentMapperQuery($connection);

@@ -113,6 +113,11 @@ class ContentFile extends AbstractComponent
             $this->contentModel->getName(),
             $this->contentModel->getUri(),
             DirType::FILE,
+            $this->contentModel->getFilename() . (
+                $this->contentModel->getExtension() !== null ?
+                '.' . $this->contentModel->getExtension() :
+                ''
+            )
         );
 
         $uri = $volume->getUri($volumeFile);

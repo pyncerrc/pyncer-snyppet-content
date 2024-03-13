@@ -2,6 +2,7 @@
 namespace Pyncer\Snyppet\Content;
 
 use Psr\Http\Server\MiddlewareInterface as PsrMiddlewareInterface;
+use Pyncer\Data\MapperQuery\QueryParams;
 use Pyncer\Http\Server\MiddlewareInterface;
 use Pyncer\Snyppet\Snyppet as BaseSnyppet;
 use Pyncer\Snyppet\Content\Middleware\InitializeMiddleware;
