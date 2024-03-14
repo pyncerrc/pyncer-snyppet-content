@@ -4,6 +4,7 @@ namespace Pyncer\Snyppet\Content\Component\Forge;
 use Pyncer\App\Identifier as ID;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Table\Content\ContentModel;
+use Pyncer\Validation\Rule\AliasRule;
 
 use const DIRECTORY_SEPARATOR as DS;
 use const Pyncer\Snyppet\Content\ALIAS_ALLOW_NUMERIC_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS;
