@@ -29,7 +29,7 @@ trait FileTrait
         $contentModel = $contentDataTree->getItem($id);
 
         $path = $contentDataTree->getAliasPath($contentModel->getParentId());
-        $filename = pyncer_http_encode_uri_path($contentModel->getFilename());
+        $filename = pyncer_http_encode_uri_path($contentModel->getAlias());
         $extension = $contentModel->getExtension();
 
         return $this->getBaseContentUri() . $path . '/' . $filename .
@@ -51,7 +51,7 @@ trait FileTrait
         $contentModel = $contentDataTree->getItem($id);
 
         $path = $contentDataTree->getAliasPath($contentModel->getParentId());
-        $filename = pyncer_http_encode_uri_path($contentModel->getFilename());
+        $filename = pyncer_http_encode_uri_path($contentModel->getAlias());
         $extension = $contentModel->getExtension();
 
         $uri = $this->getBaseContentUri() . $path . '/' . $filename .
