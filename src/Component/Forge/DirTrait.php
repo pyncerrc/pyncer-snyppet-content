@@ -31,6 +31,10 @@ trait DirTrait
 
         $path = trim($path, '/');
 
+        if ($path === '') {
+            return null;
+        }
+
         $path = explode('/', $path);
 
         $parentId = null;

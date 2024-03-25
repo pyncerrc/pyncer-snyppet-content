@@ -146,9 +146,30 @@ class Volume extends AbstractVolume
         $name = pyncer_io_filename($filename, true);
         $extension = $this->cleanExtension($filename);
         if ($extension === null) {
-            $extension = $this->cleanExtension((new Uri($uri))->getPath());
+            // If its a URL, test against path only
+            if (str_contains($uri, '://')) {
+                $extension = $this->cleanExtension((new Uri($uri))->getPath());
+            } else {
+                $extension = $this->cleanExtension($uri);
+            }
         }
         $filename = $name . ($extension !== null ? '.' . $extension : '');
+
+        if (!file_exists($uri)) {
+            $contents = file_get_contents($uri);
+            if ($contents === false) {
+                throw new VolumeException(
+                    message: 'The URI could not be read. (' . $uri . ')',
+                );
+            }
+
+            return $this->write(
+                $filename,
+                $contents,
+                $dirType,
+                $params,
+            );
+        }
 
         [$file, $volumeFileUri] = $this->getFileAndUri($filename, $dirType, $params);
 
