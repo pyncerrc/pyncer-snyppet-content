@@ -384,7 +384,6 @@ class Volume extends AbstractVolume
         }
 
         $filename = pyncer_io_filename($file);
-        $filename .= ($extension !== null ? '.' . $extension : '');
 
         $uri = str_replace(DS, '/', $path . '/' . $filename);
 
