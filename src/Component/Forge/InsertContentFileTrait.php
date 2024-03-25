@@ -21,15 +21,9 @@ trait InsertContentFileTrait
 
     protected function insertContentFile(
         VolumeFile $volumeFile,
-        ?string $path = null,
+        ?ContentModel $parentContentModel
     ): ContentModel
     {
-        if ($path === null) {
-            $parentContentModel =  null;
-        } else {
-            $parentContentModel = $this->getParentContentDir($path);
-        }
-
         $connection = $this->get(ID::DATABASE);
 
         $alias = $volumeFile->getFilename(true);

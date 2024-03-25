@@ -16,8 +16,12 @@ use const Pyncer\Snyppet\Content\ALIAS_REPLACEMENT_CHARACTER as PYNCER_SNYPPET_C
 
 trait DirTrait
 {
-    protected function getParentContentDir(string $path): ContentModel
+    protected function getParentContentDir(?string $path): ?ContentModel
     {
+        if ($path === null) {
+            return null;
+        }
+
         $connection = $this->get(ID::DATABASE);
         $contentDataTree = $this->get(ID::content());
 

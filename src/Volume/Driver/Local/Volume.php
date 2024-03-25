@@ -2,6 +2,7 @@
 namespace Pyncer\Snyppet\Content\Volume\Driver\Local;
 
 use Psr\Http\Message\UploadedFileInterface;
+use Pyncer\Http\Message\Uri;
 use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Snyppet\Content\Volume\AbstractVolume;
 use Pyncer\Snyppet\Content\Volume\DirType;
@@ -145,7 +146,7 @@ class Volume extends AbstractVolume
         $name = pyncer_io_filename($filename, true);
         $extension = $this->cleanExtension($filename);
         if ($extension === null) {
-            $extension = $this->cleanExtension($uri);
+            $extension = $this->cleanExtension((new Uri($uri))->getPath());
         }
         $filename = $name . ($extension !== null ? '.' . $extension : '');
 
