@@ -70,7 +70,7 @@ trait UploadTrait
 
     protected function hasUploadFromRequest(
         string $key,
-        ?int $existingFileId,
+        ?int $existingFileId = null,
     ): bool
     {
         $files = $this->getRequest()->getUploadedFiles();
@@ -80,10 +80,13 @@ trait UploadTrait
             return true;
         }
 
-        $data = $this->parsedBody->getData();
-        $file = $data[$key] ?? null;;
+        $file = $this->parsedBody->get($key);
         if (!is_array($file)) {
             $file = null;
+        }
+
+        if ($file === null) {
+            return false;
         }
 
         if ($existingFileId !== null) {
@@ -91,6 +94,27 @@ trait UploadTrait
             if (($file['uri'] ?? null) === $fileUri) {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    protected function clearUploadFromRequest(
+        string $key,
+        ?int $existingFileId,
+    ): bool
+    {
+        $file = $this->parsedBody->get($key);
+        if (!is_array($file)) {
+            $file = null;
+        }
+
+        if ($file !== null) {
+            return false;
+        }
+
+        if ($existingFileId !== null) {
+            return false;
         }
 
         return true;
