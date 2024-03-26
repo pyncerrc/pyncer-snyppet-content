@@ -113,7 +113,7 @@ trait UploadTrait
             return false;
         }
 
-        if ($existingFileId !== null) {
+        if ($existingFileId === null) {
             return false;
         }
 
