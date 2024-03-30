@@ -72,8 +72,8 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
     protected function isValidOption(string $option): bool
     {
         switch ($option) {
-            case 'include-data':
-            case 'include-values':
+            case 'include-content-data':
+            case 'include-content-values':
                 return true;
         }
 
@@ -85,10 +85,10 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         string $option
     ): SelectQueryInterface
     {
-        if ($option === 'include-data') {
+        if ($option === 'include-content-data') {
             $this->includeData = true;
             return $query;
-        } elseif ($option === 'include-values') {
+        } elseif ($option === 'include-content-values') {
             $this->includeValues = true;
             return $query;
         }
