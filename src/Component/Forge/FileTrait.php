@@ -2,6 +2,7 @@
 namespace Pyncer\Snyppet\Content\Component\Forge;
 
 use Pyncer\App\Identifier as ID;
+use Pyncer\Exception\InvalidArgumentException;
 use Pyncer\Snyppet\Content\Volume\DirType;
 use Pyncer\Snyppet\Content\Volume\Exception\VolumeNotFoundException;
 
@@ -28,6 +29,12 @@ trait FileTrait
 
         $contentModel = $contentDataTree->getItem($id);
 
+        if ($contentModel->getType() !== 'file') {
+            throw new InvalidArgumentException(
+                'The specified id does not belong to a file.'
+            );
+        }
+
         $path = $contentDataTree->getAliasPath($contentModel->getParentId());
         $filename = pyncer_http_encode_uri_path($contentModel->getAlias());
         $extension = $contentModel->getExtension();
@@ -49,6 +56,12 @@ trait FileTrait
         }
 
         $contentModel = $contentDataTree->getItem($id);
+
+        if ($contentModel->getType() !== 'file') {
+            throw new InvalidArgumentException(
+                'The specified id does not belong to a file.'
+            );
+        }
 
         $path = $contentDataTree->getAliasPath($contentModel->getParentId());
         $filename = pyncer_http_encode_uri_path($contentModel->getAlias());
@@ -81,6 +94,12 @@ trait FileTrait
         }
 
         $contentModel = $contentDataTree->getItem($id);
+
+        if ($contentModel->getType() !== 'file') {
+            throw new InvalidArgumentException(
+                'The specified id does not belong to a file.'
+            );
+        }
 
         $volumes = $this->get(ID::content('volumes'));
 
