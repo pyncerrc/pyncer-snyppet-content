@@ -120,6 +120,49 @@ trait FileTrait
         return $volume->getUri($volumeFile);
     }
 
+    protected function deleteContentFile(?int $id): void
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        $contentDataTree = $this->get(ID::content());
+
+        if (!$contentDataTree->hasItem($id)) {
+            return null;
+        }
+
+        $contentModel = $contentDataTree->getItem($id);
+
+        if ($contentModel->getType() !== 'file') {
+            throw new InvalidArgumentException(
+                'The specified id does not belong to a file.'
+            );
+        }
+
+        $volumes = $this->get(ID::content('volumes'));
+
+        $volume = $volumes->getFromId($contentModel->getVolumeId());
+
+        $volumeFile = new VolumeFile(
+            $volume,
+            $contentModel->getName(),
+            $contentModel->getUri(),
+            DirType::FILE,
+            $contentModel->getFilename() . (
+                $contentModel->getExtension() !== null ?
+                '.' . $contentModel->getExtension() :
+                ''
+            )
+        );
+
+        $volume->delete($volumeFile);
+
+        $connection = $this->get(ID::DATABASE);
+        $contentMapper = new ContentMapper($connection);
+        $contentMapper->delete($contentModel);
+    }
+
     protected function getBaseContentUri(): string
     {
         $uri = PYNCER_SNYPPET_CONTENT_FILE_URI;
