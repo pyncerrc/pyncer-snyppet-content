@@ -123,13 +123,13 @@ trait FileTrait
     protected function deleteContentFile(?int $id): void
     {
         if ($id === null) {
-            return null;
+            return;
         }
 
         $contentDataTree = $this->get(ID::content());
 
         if (!$contentDataTree->hasItem($id)) {
-            return null;
+            return;
         }
 
         $contentModel = $contentDataTree->getItem($id);
