@@ -21,4 +21,12 @@ class ValueMapper extends AbstractMapper
     {
         return ($model instanceof ValueModel);
     }
+
+    public function selectByKey(int $contentId, string $key): ?ModelInterface
+    {
+        return $this->selectByColumns([
+            'content_id' => $contentId,
+            'key' => $key,
+        ]);
+    }
 }

@@ -21,4 +21,12 @@ class DataMapper extends AbstractMapper
     {
         return ($model instanceof DataModel);
     }
+
+    public function selectByKey(int $contentId, string $key): ?ModelInterface
+    {
+        return $this->selectByColumns([
+            'content_id' => $contentId,
+            'key' => $key,
+        ]);
+    }
 }
