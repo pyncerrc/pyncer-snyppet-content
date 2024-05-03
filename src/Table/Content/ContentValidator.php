@@ -9,6 +9,7 @@ use Pyncer\Validation\Rule\AliasRule;
 use Pyncer\Validation\Rule\BoolRule;
 use Pyncer\Validation\Rule\DateTimeRule;
 use Pyncer\Validation\Rule\IntRule;
+use Pyncer\Validation\Rule\RequiredRule;
 use Pyncer\Validation\Rule\StringRule;
 
 use const Pyncer\Snyppet\Content\ALIAS_ALLOW_NUMERIC_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS;
@@ -61,6 +62,7 @@ class ContentValidator extends AbstractValidator
 
         $this->addRules(
             'type',
+            new RequiredRule(),
             new StringRule(
                 maxLength: 125,
             ),
@@ -108,6 +110,7 @@ class ContentValidator extends AbstractValidator
 
         $this->addRules(
             'name',
+            new RequiredRule(),
             new StringRule(
                 maxLength: 250,
             ),

@@ -5,6 +5,7 @@ use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Data\Validation\AbstractValidator;
 use Pyncer\Data\Validation\Rule\IdRule;
 use Pyncer\Database\ConnectionInterface;
+use Pyncer\Validation\Rule\RequiredRule;
 use Pyncer\Validation\Rule\StringRule;
 
 class ValueValidator extends AbstractValidator
@@ -15,20 +16,15 @@ class ValueValidator extends AbstractValidator
 
         $this->addRules(
             'content_id',
+            new RequiredRule(),
             new IdRule(
                 mapper: new ContentMapper($this->getConnection()),
             ),
         );
 
         $this->addRules(
-            'group',
-            new StringRule(
-                maxLength: 50,
-            ),
-        );
-
-        $this->addRules(
             'key',
+            new RequiredRule(),
             new StringRule(
                 maxLength: 50,
             ),
@@ -36,6 +32,7 @@ class ValueValidator extends AbstractValidator
 
         $this->addRules(
             'value',
+            new RequiredRule(),
             new StringRule(
                 maxLength: 250,
             ),
