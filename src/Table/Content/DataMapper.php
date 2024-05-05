@@ -22,11 +22,33 @@ class DataMapper extends AbstractMapper
         return ($model instanceof DataModel);
     }
 
-    public function selectByKey(int $contentId, string $key): ?ModelInterface
+    public function selectByKey(
+        int $contentId,
+        string $key,
+        ?MapperQueryInterface $mapperQuery = null
+    ): ?ModelInterface
     {
-        return $this->selectByColumns([
-            'content_id' => $contentId,
-            'key' => $key,
-        ]);
+        return $this->selectByColumns(
+            [
+                'content_id' => $contentId,
+                'key' => $key,
+            ],
+            $mapperQuery,
+        );
+    }
+
+    public function selectAllByKeys(
+        int $contentId,
+        array $keys,
+        ?MapperQueryInterface $mapperQuery = null
+    ): MapperResultInterface
+    {
+        return $this->selectAllByColumns(
+            [
+                'content_id' => $contentId,
+                'key' => $keys,
+            ],
+            $mapperQuery,
+        );
     }
 }

@@ -40,7 +40,7 @@ class ValueValidator extends AbstractValidator
 
         $this->addRules(
             'value',
-            new RequiedRule(),
+            new RequiredRule(),
             new StringRule(
                 maxLength: 250,
             ),

@@ -16,7 +16,7 @@ class DataValidator extends AbstractValidator
 
         $this->addRules(
             'content_id',
-            new RequiedRule(),
+            new RequiredRule(),
             new IdRule(
                 mapper: new ContentMapper($this->getConnection()),
             ),
@@ -24,7 +24,7 @@ class DataValidator extends AbstractValidator
 
         $this->addRules(
             'key',
-            new RequiedRule(),
+            new RequiredRule(),
             new StringRule(
                 maxLength: 50,
             ),
@@ -32,7 +32,7 @@ class DataValidator extends AbstractValidator
 
         $this->addRules(
             'type',
-            new RequiedRule(),
+            new RequiredRule(),
             new StringRule(
                 maxLength: 125,
             ),
@@ -40,7 +40,7 @@ class DataValidator extends AbstractValidator
 
         $this->addRules(
             'value',
-            new RequiedRule(),
+            new RequiredRule(),
             new StringRule(
                 maxLength: 400000,
             ),
