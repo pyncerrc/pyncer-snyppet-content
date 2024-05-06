@@ -17,7 +17,7 @@ trait FileTrait
 {
     protected function getContentUri(?int $id): ?string
     {
-        if ($id === null) {
+        if ($id === null || $id === 0) {
             return null;
         }
 
@@ -45,7 +45,7 @@ trait FileTrait
 
     protected function getContentFile(?int $id): ?array
     {
-        if ($id === null) {
+        if ($id === null || $id === 0) {
             return null;
         }
 
@@ -83,7 +83,7 @@ trait FileTrait
 
     protected function getVolumeUri(?int $id): ?string
     {
-        if ($id === null) {
+        if ($id === null || $id === 0) {
             return null;
         }
 
@@ -122,7 +122,7 @@ trait FileTrait
 
     protected function deleteContentFile(?int $id): void
     {
-        if ($id === null) {
+        if ($id === null || $id === 0) {
             return;
         }
 
