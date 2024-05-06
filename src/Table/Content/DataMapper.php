@@ -4,6 +4,7 @@ namespace Pyncer\Snyppet\Content\Table\Content;
 use Pyncer\Snyppet\Content\Table\Content\DataModel;
 use Pyncer\Data\Mapper\AbstractMapper;
 use Pyncer\Data\Model\ModelInterface;
+use Pyncer\Data\Mapper\MapperResultInterface;
 
 class DataMapper extends AbstractMapper
 {
