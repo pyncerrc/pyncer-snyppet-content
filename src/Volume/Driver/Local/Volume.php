@@ -104,11 +104,15 @@ class Volume extends AbstractVolume
     ): VolumeFile
     {
         $name = pyncer_io_filename($uploadedFile->getClientFilename(), true);
+
         $extension = $this->cleanExtension(
             $uploadedFile->getClientFilename(),
             $uploadedFile->getClientMediaType(),
         );
-        $filename = $name . ($extension !== null ? '.' . $extension : '');
+
+        $filename = $params['filename'] ?? $uploadedFile->getClientFilename();
+        $filename = pyncer_io_filename($filename);
+        $filename .= ($extension !== null ? '.' . $extension : '');
 
         [$file, $uri] = $this->getFileAndUri($filename, $dirType, $params);
 
@@ -144,6 +148,7 @@ class Volume extends AbstractVolume
     ): VolumeFile
     {
         $name = pyncer_io_filename($filename, true);
+
         $extension = $this->cleanExtension($filename);
         if ($extension === null) {
             // If its a URL, test against path only
@@ -153,7 +158,10 @@ class Volume extends AbstractVolume
                 $extension = $this->cleanExtension($uri);
             }
         }
-        $filename = $name . ($extension !== null ? '.' . $extension : '');
+
+        $filename = $params['filename'] ?? $filename;
+        $filename = pyncer_io_filename($filename, true);
+        $filename .= ($extension !== null ? '.' . $extension : '');
 
         if (!file_exists($uri)) {
             $contents = file_get_contents($uri);
@@ -206,6 +214,9 @@ class Volume extends AbstractVolume
     {
         $name = pyncer_io_filename($filename, true);
         $extension = $this->cleanExtension($filename);
+
+        $filename = $params['filename'] ?? $filename;
+        $filename = pyncer_io_filename($filename, true);
         $filename = $name . ($extension !== null ? '.' . $extension : '');
 
         [$file, $uri] = $this->getFileAndUri($filename, $dirType, $params);
