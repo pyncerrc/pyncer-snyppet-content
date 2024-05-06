@@ -16,7 +16,7 @@
         "pyncer/image": "^1.0.1",
         "pyncer/snyppet": "^1.2.0",
         "pyncer/snyppet-utility": "^1.0.0",
-        "pyncer/utility": "^1.0.1",
+        "pyncer/utility": "^1.1.1",
         "pyncer/validation": "^1.1.0"
     },
     "autoload": {

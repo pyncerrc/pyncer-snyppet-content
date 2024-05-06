@@ -2,7 +2,6 @@
 namespace Pyncer\Snyppet\Content\Table\Content\History;
 
 use Pyncer\Data\Validation\AbstractValidator;
-use Pyncer\Data\Validation\Rule\IdRule;
 use Pyncer\Database\ConnectionInterface;
 use Pyncer\Validation\Rule\AliasRule;
 use Pyncer\Validation\Rule\BoolRule;

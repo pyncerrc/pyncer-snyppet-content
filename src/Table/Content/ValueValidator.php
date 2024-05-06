@@ -3,8 +3,8 @@ namespace Pyncer\Snyppet\Content\Table\Content;
 
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Data\Validation\AbstractValidator;
-use Pyncer\Data\Validation\Rule\IdRule;
 use Pyncer\Database\ConnectionInterface;
+use Pyncer\Validation\Rule\IdRule;
 use Pyncer\Validation\Rule\RequiredRule;
 use Pyncer\Validation\Rule\StringRule;
 
