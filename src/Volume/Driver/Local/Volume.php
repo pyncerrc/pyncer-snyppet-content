@@ -103,7 +103,8 @@ class Volume extends AbstractVolume
         array $params = []
     ): VolumeFile
     {
-        $name = pyncer_io_filename($uploadedFile->getClientFilename(), true);
+        $name = $params['name'] ?? $uploadedFile->getClientFilename();
+        $name = pyncer_io_filename($name, true);
 
         $extension = $this->cleanExtension(
             $uploadedFile->getClientFilename(),
@@ -147,7 +148,8 @@ class Volume extends AbstractVolume
         array $params = []
     ): VolumeFile
     {
-        $name = pyncer_io_filename($filename, true);
+        $name = $params['name'] ?? $filename;
+        $name = pyncer_io_filename($name, true);
 
         $extension = $this->cleanExtension($filename);
         if ($extension === null) {
@@ -212,7 +214,10 @@ class Volume extends AbstractVolume
         array $params = []
     ): VolumeFile
     {
-        $name = pyncer_io_filename($filename, true);
+
+        $name = $params['name'] ?? $filename;
+        $name = pyncer_io_filename($name, true);
+
         $extension = $this->cleanExtension($filename);
 
         $filename = $params['filename'] ?? $filename;
