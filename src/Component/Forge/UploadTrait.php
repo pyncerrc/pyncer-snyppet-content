@@ -4,12 +4,14 @@ namespace Pyncer\Snyppet\Content\Component\Forge;
 use finfo;
 use Psr\Http\Message\UploadedFileInterface;
 use Pyncer\App\Identifier as ID;
+use Pyncer\Exception\InvalidArgumentException;
 use Pyncer\Snyppet\Content\Component\Forge\VolumeTrait;
 use Pyncer\Snyppet\Content\Exception\UploadException;
 use Pyncer\Snyppet\Content\MediaType;
 use Pyncer\Snyppet\Content\Volume\DirType;
 use Pyncer\Snyppet\Content\Volume\VolumeFile;
 
+use function Pyncer\Array\get_recursive as pyncer_array_get_recursive;
 use function Pyncer\IO\filename as pyncer_io_filename;
 
 use const FILEINFO_MIME_TYPE;
@@ -63,33 +65,66 @@ trait UploadTrait
         );
 
         // Delete temporary file.
+        if ($params['delete_temporary_file'] ?? null) {
+            $temporaryVolume->delete($temporaryVolumeFile);
+        }
+
+        return $volumeFile;
+    }
+
+    protected function deleteTemporaryFile(
+        string $filename,
+        string $uri,
+        array $params = [],
+    ): ?VolumeFile
+    {
+        $temporaryVolume = $this->getVolume(DirType::TEMPORARY, $params);
+
+        $temporaryVolumeFile = new VolumeFile(
+            $temporaryVolume,
+            pyncer_io_filename($filename, true),
+            $uri,
+            DirType::TEMPORARY,
+            $filename,
+        );
+
         $temporaryVolume->delete($temporaryVolumeFile);
 
         return $volumeFile;
     }
 
     protected function hasUploadFromRequest(
-        string $key,
+        string|array $key,
         ?int $existingFileId = null,
     ): bool
     {
-        $files = $this->getRequest()->getUploadedFiles();
+        if ($key === '' || $key === []) {
+            throw new InvalidArgumentException('Key cannot be empty.');
+        }
 
-        $file = $files[$key] ?? null;
+        if (is_string($key)) {
+            $keys = [$key];
+        }
+
+        $files = $this->getRequest()->getUploadedFiles();
+        $file = pyncer_array_get_recursive($files, $key);
         if ($file !== null) {
             return true;
         }
 
-        $file = $this->parsedBody->get($key);
+        $firstKey = array_shift($key);
+        $file = $this->parsedBody->get($firstKey);
         if (!is_array($file)) {
             $file = null;
+        } else {
+            $file = pyncer_array_get_recursive($file, $key);
         }
 
-        if ($file === null) {
+        if ($file === null || !is_array($file)) {
             return false;
         }
 
-        if ($existingFileId !== null) {
+        if ($existingFileId !== null && $existingFileId !== 0) {
             $fileUri = $this->getContentUri($existingFileId);
             if (($file['uri'] ?? null) === $fileUri) {
                 return false;
@@ -100,20 +135,37 @@ trait UploadTrait
     }
 
     protected function clearUploadFromRequest(
-        string $key,
+        string|array $key,
         ?int $existingFileId,
     ): bool
     {
-        $file = $this->parsedBody->get($key);
-        if (!is_array($file)) {
-            $file = null;
+        if ($key === '' || $key === []) {
+            throw new InvalidArgumentException('Key cannot be empty.');
         }
 
+        if (is_string($key)) {
+            $keys = [$key];
+        }
+
+        $files = $this->getRequest()->getUploadedFiles();
+        $file = pyncer_array_get_recursive($files, $key);
         if ($file !== null) {
             return false;
         }
 
-        if ($existingFileId === null) {
+        $firstKey = array_shift($key);
+        $file = $this->parsedBody->get($firstKey);
+        if (!is_array($file)) {
+            $file = null;
+        } else {
+            $file = pyncer_array_get_recursive($file, $key);
+        }
+
+        if ($file !== null && is_array($file)) {
+            return false;
+        }
+
+        if ($existingFileId === null || $existingFileId === 0) {
             return false;
         }
 
@@ -121,14 +173,21 @@ trait UploadTrait
     }
 
     protected function uploadFromRequest(
-        string $key,
+        string|array $key,
         DirType $dirType = DirType::FILE,
         array $params = [],
     ): VolumeFile
     {
-        $files = $this->getRequest()->getUploadedFiles();
+        if ($key === '' || $key === []) {
+            throw new InvalidArgumentException('Key cannot be empty.');
+        }
 
-        $file = $files[$key] ?? null;
+        if (is_string($key)) {
+            $keys = [$key];
+        }
+
+        $files = $this->getRequest()->getUploadedFiles();
+        $file = pyncer_array_get_recursive($files, $key);
         if ($file !== null) {
             $imageError = $this->validateUploadedFile(
                 $file,
@@ -147,10 +206,15 @@ trait UploadTrait
         }
 
         if ($dirType !== DirType::TEMPORARY) {
-            $data = $this->parsedBody->getData();
+            $firstKey = array_shift($key);
+            $file = $this->parsedBody->get($firstKey);
+            if (!is_array($file)) {
+                $file = null;
+            } else {
+                $file = pyncer_array_get_recursive($file, $key);
+            }
 
-            $file = $data[$key] ?? null;
-            if ($file !== null) {
+            if ($file !== null && is_array($file)) {
                 $filename = $file['filename'] ?? null;
                 $uri = $file['uri'] ?? null;
 
