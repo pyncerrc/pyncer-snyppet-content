@@ -24,7 +24,7 @@ abstract class AbstractVolume implements VolumeInterface
 
     public function getAlias(): string
     {
-        return $this->getAlias();
+        return $this->alias;
     }
 
     public function initialize(): void
