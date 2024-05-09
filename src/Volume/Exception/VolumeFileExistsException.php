@@ -7,6 +7,7 @@ use Throwable;
 class VolumeFileExistsException extends VolumeException
 {
     protected string $volume;
+    protected string $uri;
 
     public function __construct(
         int|string $volume,

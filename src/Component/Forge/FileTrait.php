@@ -3,8 +3,10 @@ namespace Pyncer\Snyppet\Content\Component\Forge;
 
 use Pyncer\App\Identifier as ID;
 use Pyncer\Exception\InvalidArgumentException;
+use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Volume\DirType;
 use Pyncer\Snyppet\Content\Volume\Exception\VolumeNotFoundException;
+use Pyncer\Snyppet\Content\Volume\VolumeFile;
 
 use function Pyncer\Http\clean_path as pyncer_http_clean_path;
 use function Pyncer\Http\clean_uri as pyncer_http_clean_uri;
@@ -15,19 +17,19 @@ use const Pyncer\Snyppet\Content\FILE_URI_PATH as PYNCER_SNYPPET_CONTENT_FILE_UR
 
 trait FileTrait
 {
-    protected function getContentUri(?int $id): ?string
+    protected function getContentUri(?int $fileId): ?string
     {
-        if ($id === null || $id === 0) {
+        if ($fileId === null || $fileId === 0) {
             return null;
         }
 
         $contentDataTree = $this->get(ID::content());
 
-        if (!$contentDataTree->hasItem($id)) {
+        if (!$contentDataTree->hasItem($fileId)) {
             return null;
         }
 
-        $contentModel = $contentDataTree->getItem($id);
+        $contentModel = $contentDataTree->getItem($fileId);
 
         if ($contentModel->getType() !== 'file') {
             throw new InvalidArgumentException(
@@ -43,19 +45,19 @@ trait FileTrait
             ($extension ? '.' . $extension : '');
     }
 
-    protected function getContentFile(?int $id): ?array
+    protected function getContentFile(?int $fileId): ?array
     {
-        if ($id === null || $id === 0) {
+        if ($fileId === null || $fileId === 0) {
             return null;
         }
 
         $contentDataTree = $this->get(ID::content());
 
-        if (!$contentDataTree->hasItem($id)) {
+        if (!$contentDataTree->hasItem($fileId)) {
             return null;
         }
 
-        $contentModel = $contentDataTree->getItem($id);
+        $contentModel = $contentDataTree->getItem($fileId);
 
         if ($contentModel->getType() !== 'file') {
             throw new InvalidArgumentException(
@@ -81,19 +83,19 @@ trait FileTrait
         ];
     }
 
-    protected function getVolumeUri(?int $id): ?string
+    protected function getVolumeUri(?int $fileId): ?string
     {
-        if ($id === null || $id === 0) {
+        if ($fileId === null || $fileId === 0) {
             return null;
         }
 
         $contentDataTree = $this->get(ID::content());
 
-        if (!$contentDataTree->hasItem($id)) {
+        if (!$contentDataTree->hasItem($fileId)) {
             return null;
         }
 
-        $contentModel = $contentDataTree->getItem($id);
+        $contentModel = $contentDataTree->getItem($fileId);
 
         if ($contentModel->getType() !== 'file') {
             throw new InvalidArgumentException(
@@ -120,19 +122,19 @@ trait FileTrait
         return $volume->getUri($volumeFile);
     }
 
-    protected function deleteContentFile(?int $id): void
+    protected function deleteContentFile(?int $fileId): void
     {
-        if ($id === null || $id === 0) {
+        if ($fileId === null || $fileId === 0) {
             return;
         }
 
         $contentDataTree = $this->get(ID::content());
 
-        if (!$contentDataTree->hasItem($id)) {
+        if (!$contentDataTree->hasItem($fileId)) {
             return;
         }
 
-        $contentModel = $contentDataTree->getItem($id);
+        $contentModel = $contentDataTree->getItem($fileId);
 
         if ($contentModel->getType() !== 'file') {
             throw new InvalidArgumentException(
