@@ -76,7 +76,7 @@ trait UploadTrait
         string $filename,
         string $uri,
         array $params = [],
-    ): ?VolumeFile
+    ): void
     {
         $temporaryVolume = $this->getVolume(DirType::TEMPORARY, $params);
 
@@ -89,8 +89,6 @@ trait UploadTrait
         );
 
         $temporaryVolume->delete($temporaryVolumeFile);
-
-        return $volumeFile;
     }
 
     protected function hasUploadFromRequest(
@@ -103,7 +101,7 @@ trait UploadTrait
         }
 
         if (is_string($key)) {
-            $keys = [$key];
+            $key = [$key];
         }
 
         $files = $this->getRequest()->getUploadedFiles();
@@ -144,7 +142,7 @@ trait UploadTrait
         }
 
         if (is_string($key)) {
-            $keys = [$key];
+            $key = [$key];
         }
 
         $files = $this->getRequest()->getUploadedFiles();
@@ -183,7 +181,7 @@ trait UploadTrait
         }
 
         if (is_string($key)) {
-            $keys = [$key];
+            $key = [$key];
         }
 
         $files = $this->getRequest()->getUploadedFiles();
