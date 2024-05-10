@@ -67,6 +67,7 @@ class Install extends AbstractInstall
             ->serial('id')
             ->string('table', 250)->index()
             ->string('column', 250)->index()
+            ->text('params')->null()
             ->execute();
 
         $this->connection->createTable('content__history')
