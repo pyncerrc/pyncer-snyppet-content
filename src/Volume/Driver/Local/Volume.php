@@ -63,7 +63,7 @@ class Volume extends AbstractVolume
             );
         }
 
-        $contents = file_get_contents($file);
+        $contents = @file_get_contents($file);
 
         if ($contents === false) {
             throw new VolumeException(
@@ -166,7 +166,7 @@ class Volume extends AbstractVolume
         $filename .= ($extension !== null ? '.' . $extension : '');
 
         if (!file_exists($uri)) {
-            $contents = file_get_contents($uri);
+            $contents = @file_get_contents($uri);
             if ($contents === false) {
                 throw new VolumeException(
                     message: 'The URI could not be read. (' . $uri . ')',
