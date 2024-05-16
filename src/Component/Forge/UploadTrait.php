@@ -5,7 +5,6 @@ use finfo;
 use Psr\Http\Message\UploadedFileInterface;
 use Pyncer\App\Identifier as ID;
 use Pyncer\Exception\InvalidArgumentException;
-use Pyncer\Snyppet\Content\Component\Forge\VolumeTrait;
 use Pyncer\Snyppet\Content\Exception\UploadException;
 use Pyncer\Snyppet\Content\MediaType;
 use Pyncer\Snyppet\Content\Volume\DirType;
@@ -22,8 +21,6 @@ use const UPLOAD_ERR_OK;
 
 trait UploadTrait
 {
-    use VolumeTrait;
-
     protected function uploadFile(
         UploadedFileInterface $uploadedFile,
         DirType $dirType = DirType::FILE,
@@ -213,6 +210,68 @@ trait UploadTrait
             }
 
             if ($file !== null && is_array($file)) {
+                $filename = $file['filename'] ?? null;
+                $uri = $file['uri'] ?? null;
+
+                if ($filename === null || $uri === null) {
+                    throw new UploadException('invalid');
+                }
+
+                return $this->moveTemporaryFile(
+                    $filename,
+                    $uri,
+                    $dirType,
+                    $params,
+                );
+            }
+        }
+
+        throw new UploadException('required');
+    }
+
+    protected function hasUploadFromValue(
+        ?array $file,
+        ?int $existingFileId = null,
+    ): bool
+    {
+        if ($file === null || $file === []) {
+            return false;
+        }
+
+        if ($existingFileId !== null && $existingFileId !== 0) {
+            $fileUri = $this->getContentUri($existingFileId);
+            if (($file['uri'] ?? null) === $fileUri) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function clearUploadFromValue(
+        ?array $file,
+        ?int $existingFileId,
+    ): bool
+    {
+        if ($file !== null && $file !== []) {
+            return false;
+        }
+
+        if ($existingFileId === null || $existingFileId === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function uploadFromValue(
+        ?array $file,
+        DirType $dirType = DirType::FILE,
+        array $params = [],
+    ): VolumeFile
+    {
+        if ($dirType !== DirType::TEMPORARY) {
+            if ($file !== null && $file !== []) {
                 $filename = $file['filename'] ?? null;
                 $uri = $file['uri'] ?? null;
 

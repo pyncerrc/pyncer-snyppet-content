@@ -2,7 +2,6 @@
 namespace Pyncer\Snyppet\Content\Component\Forge;
 
 use Pyncer\App\Identifier as ID;
-use Pyncer\Snyppet\Content\Component\Forge\DirTrait;
 use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Volume\VolumeFile;
@@ -17,8 +16,6 @@ use const Pyncer\Snyppet\Content\ALIAS_REPLACEMENT_CHARACTER as PYNCER_SNYPPET_C
 
 trait InsertContentFileTrait
 {
-    use DirTrait;
-
     protected function insertContentFile(
         VolumeFile $volumeFile,
         ?string $path = null,
