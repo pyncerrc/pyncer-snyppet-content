@@ -8,12 +8,14 @@ use Pyncer\Http\Message\JsonResponse;
 use Pyncer\Http\Message\Response;
 use Pyncer\Http\Message\Status;
 use Pyncer\Snyppet\Content\Component\Forge\LogVolumeExceptionTrait;
+use Pyncer\Snyppet\Content\Component\Forge\VolumeTrait;
 use Pyncer\Snyppet\Content\Component\Forge\UploadTrait;
 use Pyncer\Snyppet\Content\Volume\DirType;
 
 class PostTemporaryFileModule extends AbstractModule
 {
     use UploadTrait;
+    use VolumeTrait;
     use LogVolumeExceptionTrait;
 
     protected bool $multiple = false;
