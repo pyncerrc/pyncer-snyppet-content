@@ -107,23 +107,10 @@ trait UploadTrait
             return true;
         }
 
-        $firstKey = array_shift($key);
-        $file = $this->parsedBody->get($firstKey);
-        if (!is_array($file)) {
-            $file = null;
-        } else {
-            $file = pyncer_array_get_recursive($file, $key);
-        }
+        $file = $this->getFileValueFromRequest($key, $existingFileId);
 
-        if ($file === null || !is_array($file)) {
+        if ($file === null) {
             return false;
-        }
-
-        if ($existingFileId !== null && $existingFileId !== 0) {
-            $fileUri = $this->getContentUri($existingFileId);
-            if (($file['uri'] ?? null) === $fileUri) {
-                return false;
-            }
         }
 
         return true;
@@ -148,15 +135,9 @@ trait UploadTrait
             return false;
         }
 
-        $firstKey = array_shift($key);
-        $file = $this->parsedBody->get($firstKey);
-        if (!is_array($file)) {
-            $file = null;
-        } else {
-            $file = pyncer_array_get_recursive($file, $key);
-        }
+        $file = $this->getFileValueFromRequest($key);
 
-        if ($file !== null && is_array($file)) {
+        if ($file !== null) {
             return false;
         }
 
@@ -201,15 +182,9 @@ trait UploadTrait
         }
 
         if ($dirType !== DirType::TEMPORARY) {
-            $firstKey = array_shift($key);
-            $file = $this->parsedBody->get($firstKey);
-            if (!is_array($file)) {
-                $file = null;
-            } else {
-                $file = pyncer_array_get_recursive($file, $key);
-            }
+            $file = $this->getFileValueFromRequest($key);
 
-            if ($file !== null && is_array($file)) {
+            if ($file !== null) {
                 $filename = $file['filename'] ?? null;
                 $uri = $file['uri'] ?? null;
 
@@ -229,7 +204,38 @@ trait UploadTrait
         throw new UploadException('required');
     }
 
-    protected function hasUploadFromValue(
+    private function getFileValueFromRequest(
+        string|array $key,
+        ?int $existingFileId = null,
+    ): ?array
+    {
+        if (is_string($key)) {
+            $key = [$key];
+        }
+
+        $firstKey = array_shift($key);
+        $file = $this->parsedBody->get($firstKey);
+        if (!is_array($file)) {
+            $file = null;
+        } else {
+            $file = pyncer_array_get_recursive($file, $key);
+        }
+
+        if ($file === null || !is_array($file)) {
+            return null;
+        }
+
+        if ($existingFileId !== null && $existingFileId !== 0) {
+            $fileUri = $this->getContentUri($existingFileId);
+            if (($file['uri'] ?? null) === $fileUri) {
+                return null;
+            }
+        }
+
+        return $file;
+    }
+
+    protected function hasUploadFromFileValue(
         ?array $file,
         ?int $existingFileId = null,
     ): bool
@@ -248,7 +254,7 @@ trait UploadTrait
         return true;
     }
 
-    protected function clearUploadFromValue(
+    protected function clearUploadFromFileValue(
         ?array $file,
         ?int $existingFileId,
     ): bool
@@ -264,7 +270,7 @@ trait UploadTrait
         return true;
     }
 
-    protected function uploadFromValue(
+    protected function uploadFromFileValue(
         ?array $file,
         DirType $dirType = DirType::FILE,
         array $params = [],
