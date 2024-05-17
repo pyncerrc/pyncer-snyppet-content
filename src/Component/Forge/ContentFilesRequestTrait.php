@@ -99,7 +99,7 @@ trait ContentFilesRequestTrait
         }
     }
 
-    public function commit(): void
+    public function commitContentFiles(): void
     {
         foreach ($this->temporaryFiles as $file) {
             $filename = $file['filename'] ?? null;
@@ -113,7 +113,7 @@ trait ContentFilesRequestTrait
         }
     }
 
-    public function rollback(): void
+    public function rollbackContentFiles(): void
     {
         foreach ($this->insertedFileIds as $fileId) {
             $this->deleteContentFile($fileId);
