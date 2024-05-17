@@ -1,5 +1,5 @@
 <?php
-namespace Pyncer\Snyppet\Component\Forge;
+namespace Pyncer\Snyppet\Content\Component\Forge;
 
 use Pyncer\Snyppet\Content\Component\Forge\ContentFilesTrait;
 
