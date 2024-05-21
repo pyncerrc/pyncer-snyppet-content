@@ -7,10 +7,12 @@ use Pyncer\Component\Module\AbstractModule;
 use Pyncer\Http\Message\JsonResponse;
 use Pyncer\Http\Message\Response;
 use Pyncer\Http\Message\Status;
+use Pyncer\Snyppet\Content\Exception\UploadException;
 use Pyncer\Snyppet\Content\Component\Forge\LogVolumeExceptionTrait;
 use Pyncer\Snyppet\Content\Component\Forge\VolumeTrait;
 use Pyncer\Snyppet\Content\Component\Forge\UploadTrait;
 use Pyncer\Snyppet\Content\Volume\DirType;
+use Pyncer\Snyppet\Content\Volume\Exception\VolumeException;
 
 class PostTemporaryFileModule extends AbstractModule
 {
@@ -76,7 +78,10 @@ class PostTemporaryFileModule extends AbstractModule
             $volumeFile = $this->uploadFromRequest(
                 'file',
                 DirType::TEMPORARY,
-                ['volume' => $this->getVolumeIdentifier()],
+                [
+                    'volume' => $this->getVolumeIdentifier(),
+                    'allowed_media_types' => $this->getAllowedMediaTypes(),
+                ],
             );
         } catch (UploadException $e) {
             $error = $e->getError();

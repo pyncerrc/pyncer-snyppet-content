@@ -165,13 +165,13 @@ trait UploadTrait
         $files = $this->getRequest()->getUploadedFiles();
         $file = pyncer_array_get_recursive($files, $key);
         if ($file !== null) {
-            $imageError = $this->validateUploadedFile(
+            $uploadError = $this->validateUploadedFile(
                 $file,
-                $this->getAllowedMediaTypes()
+                $params['allowed_media_types'] ?? null,
             );
 
-            if ($imageError !== null) {
-                throw new UploadException($imageError, $file->getError());
+            if ($uploadError !== null) {
+                throw new UploadException($uploadError, $file->getError());
             }
 
             return $this->uploadFile(
@@ -331,7 +331,6 @@ trait UploadTrait
         ?array $allowedMediaTypes = null,
     ): bool
     {
-        $allowedMediaTypes = $allowedMediaTypes;
         if ($allowedMediaTypes !== null) {
             if (!in_array($file->getClientMediaType(), $allowedMediaTypes)) {
                 return false;
@@ -346,6 +345,11 @@ trait UploadTrait
             $mediaType = $finfo->file($file->getFile());
         } else {
             $mediaType = $finfo->buffer($file->getStream()->getContents());
+        }
+
+        // Normalize ico media type
+        if ($mediaType === 'image/vnd.microsoft.icon') {
+            $mediaType = 'image/x-icon';
         }
 
         if ($mediaType !== $file->getClientMediaType()) {
