@@ -24,7 +24,7 @@ trait ContentFilesRequestTrait
     {
         [$fileId, $errors] = $this->uploadContentFile(
             key: $key,
-            path: $this->path,
+            path: $path,
             existingFileId: $existingFileId,
             params: $params,
         );
@@ -44,7 +44,7 @@ trait ContentFilesRequestTrait
     {
         [$fileId, $errors] = $this->uploadContentFileFromValue(
             key: $key,
-            path: $this->path,
+            path: $path,
             file: $file,
             existingFileId: $existingFileId,
             params: $params,
@@ -65,7 +65,7 @@ trait ContentFilesRequestTrait
     {
         [$fileId, $errors] = $this->uploadContentFileFromValue(
             key: $key,
-            path: $this->path,
+            path: $path,
             uri: $uri,
             existingFileId: $existingFileId,
             params: $params,

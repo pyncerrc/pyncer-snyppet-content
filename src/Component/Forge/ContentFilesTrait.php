@@ -37,6 +37,8 @@ trait ContentFilesTrait
             $errorKey = $key;
         }
 
+        $newFileId = null;
+
         if ($this->hasUploadFromRequest($key, $existingFileId)) {
             $newFileId = null;
             $volumeFile = null;
@@ -61,20 +63,18 @@ trait ContentFilesTrait
 
                 $newFileId = $contentModel->getId();
             }
-        } else {
-            if ($this->clearUploadFromRequest($key, $existingFileId)) {
-                $newFileId = null;
-            } else {
-                $newFileId = $existingFileId;
-            }
+        } elseif (!$this->clearUploadFromRequest($key, $existingFileId)) {
+            $newFileId = $existingFileId;
         }
 
         // If image updated with no errors then delete old
-        if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
-            try {
-                $this->deleteContentFile($existingFileId);
-            } catch (VolumeException $e) {
-                $this->logVolumeException($e);
+        if ($params['delete_existing_file'] ?? false) {
+            if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
+                try {
+                    $this->deleteContentFile($existingFileId);
+                } catch (VolumeException $e) {
+                    $this->logVolumeException($e);
+                }
             }
         }
 
@@ -96,6 +96,8 @@ trait ContentFilesTrait
         } else {
             $errorKey = $key;
         }
+
+        $newFileId = null;
 
         if ($this->hasUploadFromValue($file, $existingFileId)) {
             $newFileId = null;
@@ -121,18 +123,18 @@ trait ContentFilesTrait
 
                 $newFileId = $contentModel->getId();
             }
-        } elseif ($this->clearUploadFromValue($file, $existingFileId)) {
-            $newFileId = null;
-        } else {
+        } elseif (!$this->clearUploadFromValue($file, $existingFileId)) {
             $newFileId = $existingFileId;
         }
 
         // If image updated with no errors then delete old
-        if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
-            try {
-                $this->deleteContentFile($existingFileId);
-            } catch (VolumeException $e) {
-                $this->logVolumeException($e);
+        if ($params['delete_existing_file'] ?? false) {
+            if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
+                try {
+                    $this->deleteContentFile($existingFileId);
+                } catch (VolumeException $e) {
+                    $this->logVolumeException($e);
+                }
             }
         }
 
@@ -182,18 +184,16 @@ trait ContentFilesTrait
 
                 $newFileId = $contentModel->getId();
             }
-        } elseif ($this->clearUploadFromRequest($key, $existingFileId)) {
-            $newFileId = null;
-        } else {
-            $newFileId = $existingFileId;
         }
 
         // If image updated with no errors then delete old
-        if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
-            try {
-                $this->deleteContentFile($existingFileId);
-            } catch (VolumeException $e) {
-                $this->logVolumeException($e);
+        if ($params['delete_existing_file'] ?? false) {
+            if (!$errors && $existingFileId && $existingFileId !== $newFileId) {
+                try {
+                    $this->deleteContentFile($existingFileId);
+                } catch (VolumeException $e) {
+                    $this->logVolumeException($e);
+                }
             }
         }
 
