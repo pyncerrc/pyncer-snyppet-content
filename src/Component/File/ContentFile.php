@@ -1,15 +1,13 @@
 <?php
 namespace Pyncer\Snyppet\Content\Component\File;
 
-use finfo;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Pyncer\App\Identifier as ID;
 use Pyncer\Component\AbstractComponent;
-use Pyncer\Http\Message\FileStream;
 use Pyncer\Http\Message\Response;
 use Pyncer\Http\Message\Status;
-use Pyncer\Snyppet\Content\FileMethod;
+use Pyncer\Snyppet\Content\Component\Forge\FileResponseTrait;
 use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Volume\DirType;
@@ -19,12 +17,10 @@ use function Pyncer\IO\clean_dir as pyncer_io_clean_dir;
 use function Pyncer\IO\extension as pyncer_io_extension;
 use function Pyncer\IO\filename as pyncer_io_filename;
 
-use const DIRECTORY_SEPARATOR as DS;
-use const Pyncer\Snyppet\Content\FILE_METHOD as PYNCER_SNYPPET_CONTENT_FILE_METHOD;
-use const FILEINFO_MIME_TYPE;
-
 class ContentFile extends AbstractComponent
 {
+    use FileResponseTrait;
+
     protected ?string $dir;
     protected array $paths;
 
@@ -122,40 +118,10 @@ class ContentFile extends AbstractComponent
 
         $uri = $volume->getUri($volumeFile);
 
-        if (filter_var($uri, FILTER_VALIDATE_URL) !== false) {
-            return (new Response(Status::REDIRECTION_302_FOUND))
-                ->withHeader('Location', $uri);
-        }
-
-        if (PYNCER_SNYPPET_CONTENT_FILE_METHOD === FileMethod::ACCEL_REDIRECT) {
-            return (new Response(Status::SUCCESS_200_OK))
-                ->withHeader('X-Accel-Redirect', $uri);
-        }
-
-        if (PYNCER_SNYPPET_CONTENT_FILE_METHOD === FileMethod::SENDFILE) {
-            return (new Response(Status::SUCCESS_200_OK))
-                ->withHeader('X-Sendfile', $uri);
-        }
-
-        $fileStream = new FileStream($uri);
-        $fileStream->setUseReadFile(true);
-
-        $response = new Response(
-            status: Status::SUCCESS_200_OK,
-            body: $fileStream,
-        );
-
         $filename = $this->contentModel->getFilename();
         $extension = $this->contentModel->getExtension();
         $filename .= ($extension !== null ? '.' . $extension : '');
 
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($uri);
-
-        $response = $response->withHeader('Content-Type', $mimeType);
-        $response = $response->withHeader('Content-Disposition', 'filename="' . $filename . '"');
-        $response = $response->withHeader('Content-Length', filesize($uri));
-
-        return $response;
+        return $this->getFileResponse($filename, $uri);
     }
 }
