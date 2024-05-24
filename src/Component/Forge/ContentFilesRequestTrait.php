@@ -34,7 +34,7 @@ trait ContentFilesRequestTrait
         return [$fileId, $errors];
     }
 
-    public function validateContentFileFromValue(
+    public function validateContentFileFromFileValue(
         string|array $key,
         string $path,
         ?array $file,
