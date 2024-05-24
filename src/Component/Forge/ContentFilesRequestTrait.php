@@ -42,7 +42,7 @@ trait ContentFilesRequestTrait
         array $params = []
     ): array
     {
-        [$fileId, $errors] = $this->uploadContentFileFromValue(
+        [$fileId, $errors] = $this->uploadContentFileFromFileValue(
             key: $key,
             path: $path,
             file: $file,
@@ -63,7 +63,7 @@ trait ContentFilesRequestTrait
         array $params = []
     ): array
     {
-        [$fileId, $errors] = $this->uploadContentFileFromValue(
+        [$fileId, $errors] = $this->uploadContentFileFromUri(
             key: $key,
             path: $path,
             uri: $uri,

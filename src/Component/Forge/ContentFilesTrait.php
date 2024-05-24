@@ -81,7 +81,7 @@ trait ContentFilesTrait
         return [$newFileId, $errors];
     }
 
-    public function uploadContentFileFromValue(
+    public function uploadContentFileFromFileValue(
         string|array $key,
         string $path,
         ?array $file,
@@ -99,7 +99,7 @@ trait ContentFilesTrait
 
         $newFileId = null;
 
-        if ($this->hasUploadFromValue($file, $existingFileId)) {
+        if ($this->hasUploadFromFileValue($file, $existingFileId)) {
             $newFileId = null;
             $volumeFile = null;
 
@@ -123,7 +123,7 @@ trait ContentFilesTrait
 
                 $newFileId = $contentModel->getId();
             }
-        } elseif (!$this->clearUploadFromValue($file, $existingFileId)) {
+        } elseif (!$this->clearUploadFromFileValue($file, $existingFileId)) {
             $newFileId = $existingFileId;
         }
 
