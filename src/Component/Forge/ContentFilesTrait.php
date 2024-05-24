@@ -104,7 +104,7 @@ trait ContentFilesTrait
             $volumeFile = null;
 
             try {
-                $volumeFile = $this->uploadFromValue(
+                $volumeFile = $this->uploadFromFileValue(
                     file: $file,
                     params: $params,
                 );
