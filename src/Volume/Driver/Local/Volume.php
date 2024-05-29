@@ -83,7 +83,6 @@ class Volume extends AbstractVolume
     {
         $stream = tmpfile();
         fwrite($stream, $contents);
-        rewind($stream);
 
         $volumeFile = $this->writeFromStream(
             $filename,
@@ -214,7 +213,6 @@ class Volume extends AbstractVolume
         array $params = []
     ): VolumeFile
     {
-
         $name = $params['name'] ?? $filename;
         $name = pyncer_io_filename($name, true);
 
@@ -222,15 +220,22 @@ class Volume extends AbstractVolume
 
         $filename = $params['filename'] ?? $filename;
         $filename = pyncer_io_filename($filename, true);
-        $filename = $name . ($extension !== null ? '.' . $extension : '');
+        $filename .= ($extension !== null ? '.' . $extension : '');
 
         [$file, $uri] = $this->getFileAndUri($filename, $dirType, $params);
 
+        $position = ftell($stream);
+
+        rewind($stream);
+
         if (file_put_contents($file, $stream) === false) {
+            fseek($stream, $position);
             throw new VolumeException(
                 message: 'The volume file could not be written. (' . $file . ')',
             );
         }
+
+        fseek($stream, $position);
 
         try {
             pyncer_io_chmod($file);
