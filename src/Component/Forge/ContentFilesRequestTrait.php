@@ -86,6 +86,7 @@ trait ContentFilesRequestTrait
             if ($fileId !== null) {
                 $file = $this->getFileValueFromRequest($key, $existingFileId);
 
+                // $file will be null unless a new file, so its assumed temporary.
                 if ($file !== null) {
                     $this->temporaryFiles[] = $file;
                 }

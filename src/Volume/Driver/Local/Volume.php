@@ -107,7 +107,7 @@ class Volume extends AbstractVolume
 
         $extension = $this->cleanExtension(
             $uploadedFile->getClientFilename(),
-            $uploadedFile->getClientMediaType(),
+            $params['media_type'] ?? $uploadedFile->getClientMediaType(),
         );
 
         $filename = $params['filename'] ?? $uploadedFile->getClientFilename();
@@ -150,13 +150,22 @@ class Volume extends AbstractVolume
         $name = $params['name'] ?? $filename;
         $name = pyncer_io_filename($name, true);
 
-        $extension = $this->cleanExtension($filename);
+        $extension = $this->cleanExtension(
+            $filename,
+            $params['media_type'] ?? null,
+        );
         if ($extension === null) {
             // If its a URL, test against path only
             if (str_contains($uri, '://')) {
-                $extension = $this->cleanExtension((new Uri($uri))->getPath());
+                $extension = $this->cleanExtension(
+                    (new Uri($uri))->getPath(),
+                    $params['media_type'] ?? null,
+                );
             } else {
-                $extension = $this->cleanExtension($uri);
+                $extension = $this->cleanExtension(
+                    $uri,
+                    $params['media_type'] ?? null,
+                );
             }
         }
 
@@ -216,7 +225,10 @@ class Volume extends AbstractVolume
         $name = $params['name'] ?? $filename;
         $name = pyncer_io_filename($name, true);
 
-        $extension = $this->cleanExtension($filename);
+        $extension = $this->cleanExtension(
+            $filename,
+            $params['media_type'] ?? null,
+        );
 
         $filename = $params['filename'] ?? $filename;
         $filename = pyncer_io_filename($filename, true);

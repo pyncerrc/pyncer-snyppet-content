@@ -32,11 +32,13 @@ abstract class AbstractVolume implements VolumeInterface
 
     protected function cleanExtension(
         string $filename,
-        string $mediaType = null,
+        null|string|MediaType $mediaType = null,
     ): ?string
     {
         if ($mediaType !== null) {
-            $mediaType = MediaType::tryFrom($mediaType);
+            if (is_string($mediaType)) {
+                $mediaType = MediaType::tryFrom($mediaType);
+            }
 
             if ($mediaType !== null) {
                 return $mediaType->getExtension();
