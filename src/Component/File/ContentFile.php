@@ -70,17 +70,21 @@ class ContentFile extends AbstractComponent
         $extension = pyncer_io_extension($filename);
         $filename = pyncer_io_filename($filename, true);
 
-        $path = implode('/', $paths);
+        if ($paths) {
+            $path = implode('/', $paths);
 
-        if (!$contentDataTree->hasItemFromDirPath($path)) {
-            return false;
+            if (!$contentDataTree->hasItemFromDirPath($path)) {
+                return false;
+            }
+
+            $parentContentModel = $contentDataTree->getItemFromDirPath($path);
+        } else {
+            $parentContentModel = null;
         }
-
-        $parentContentModel = $contentDataTree->getItemFromDirPath($path);
 
         if (!$contentDataTree->hasItemFromAlias(
             $filename,
-            $parentContentModel->getId(),
+            $parentContentModel?->getId(),
         )) {
             return false;
         }
