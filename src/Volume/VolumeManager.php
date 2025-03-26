@@ -48,7 +48,7 @@ class VolumeManager extends Iterator
             if ($row['params'] === null) {
                 $params = [];
             } else {
-                $params = pyncer_map_defines(json_decode($row['params'], true), $namespace),
+                $params = pyncer_map_defines(json_decode($row['params'], true), $namespace);
             }
 
             $driver = new Driver($row['volume'], $path, $params);
