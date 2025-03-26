@@ -11,7 +11,7 @@ defined('Pyncer\Snyppet\Content\FILE_URI_PATH') or define('Pyncer\Snyppet\Conten
 defined('Pyncer\Snyppet\Content\FILE_DIR') or define('Pyncer\Snyppet\Content\FILE_DIR', null);
 defined('Pyncer\Snyppet\Content\FILE_DIR_PATH') or define('Pyncer\Snyppet\Content\FILE_DIR_PATH', DS . 'content' . DS . 'files');
 
-defined('Pyncer\Snyppet\Content\CACHE_DIR') or define('Pyncer\Snyppet\Content\CACHE_PATH', null);
+defined('Pyncer\Snyppet\Content\CACHE_DIR') or define('Pyncer\Snyppet\Content\CACHE_DIR', null);
 defined('Pyncer\Snyppet\Content\CACHE_DIR_PATH') or define('Pyncer\Snyppet\Content\CACHE_DIR_PATH', DS . 'content' . DS . 'cache');
 
 defined('Pyncer\Snyppet\Content\TEMPORARY_DIR') or define('Pyncer\Snyppet\Content\TEMPORARY_DIR', null);

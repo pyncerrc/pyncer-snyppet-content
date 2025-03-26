@@ -70,6 +70,11 @@ class ContentFile extends AbstractComponent
         $extension = pyncer_io_extension($filename);
         $filename = pyncer_io_filename($filename, true);
 
+        // .file not currently supported
+        if ($filename === null) {
+            return false;
+        }
+
         if ($paths) {
             $path = implode('/', $paths);
 

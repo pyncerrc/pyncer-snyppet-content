@@ -43,11 +43,15 @@ class VolumeManager extends Iterator
                 $namespace = \Pyncer\ENV_NAMESPACE;
             }
 
-            $driver = new Driver(
-                $row['volume'],
-                pyncer_map_defines($row['path'], $namespace),
-                pyncer_map_defines(json_decode($row['params'], true), $namespace),
-            );
+            $path = pyncer_map_defines($row['path'], $namespace);
+
+            if ($row['params'] === null) {
+                $params = [];
+            } else {
+                $params = pyncer_map_defines(json_decode($row['params'], true), $namespace),
+            }
+
+            $driver = new Driver($row['volume'], $path, $params);
 
             $this->values[$row['alias']] = $driver->getVolume($row['id'], $row['alias']);
             $this->idMap[$row['id']] = $row['alias'];

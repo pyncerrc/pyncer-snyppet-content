@@ -235,10 +235,7 @@ class Install extends AbstractInstall
                 'name' => 'Local',
                 'volume' => 'Local',
                 'path' => null,
-                'params' => json_encode([
-                    'file_path' => '${Pyncer__Snyppet__Content__FILE_PATH}',
-                    'cache_path' => '${Pyncer__Snyppet__Content__CACHE_PATH}',
-                ]),
+                'params' => null,
                 'enabled' => true,
             ])
             ->execute();
