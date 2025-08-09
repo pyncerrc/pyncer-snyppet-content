@@ -6,6 +6,7 @@ use Pyncer\Data\Validation\AbstractValidator;
 use Pyncer\Database\ConnectionInterface;
 use Pyncer\Validation\Rule\EnumRule;
 use Pyncer\Validation\Rule\IdRule;
+use Pyncer\Validation\Rule\IntRule;
 use Pyncer\Validation\Rule\StringRule;
 
 class VolumeValidator extends AbstractValidator
@@ -16,9 +17,12 @@ class VolumeValidator extends AbstractValidator
 
         $this->addRules(
             'cache_id',
+            new IntRule(
+                minValue: 0,
+                allowNull: true,
+            ),
             new IdRule(
                 mapper: new VolumeMapper($this->getConnection()),
-                allowNull: true,
             ),
         );
 

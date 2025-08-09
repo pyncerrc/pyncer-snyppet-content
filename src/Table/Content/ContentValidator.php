@@ -12,12 +12,12 @@ use Pyncer\Validation\Rule\IntRule;
 use Pyncer\Validation\Rule\RequiredRule;
 use Pyncer\Validation\Rule\StringRule;
 
-use const Pyncer\Snyppet\Content\ALIAS_ALLOW_NUMERIC_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS;
-use const Pyncer\Snyppet\Content\ALIAS_ALLOW_LOWER_CASE_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_LOWER_CASE_CHARACTERS;
-use const Pyncer\Snyppet\Content\ALIAS_ALLOW_UPPER_CASE_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_UPPER_CASE_CHARACTERS;
-use const Pyncer\Snyppet\Content\ALIAS_ALLOW_UNICODE_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_UNICODE_CHARACTERS;
-use const Pyncer\Snyppet\Content\ALIAS_SEPARATOR_CHARACTERS as PYNCER_SNYPPET_CONTENT_ALIAS_SEPARATOR_CHARACTERS;
-use const Pyncer\Snyppet\Content\ALIAS_REPLACEMENT_CHARACTER as PYNCER_SNYPPET_CONTENT_ALIAS_REPLACEMENT_CHARACTER;
+use const Pyncer\Snyppet\Content\ALIAS_ALLOW_NUMERIC_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS;
+use const Pyncer\Snyppet\Content\ALIAS_ALLOW_LOWER_CASE_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_LOWER_CASE_CHARACTERS;
+use const Pyncer\Snyppet\Content\ALIAS_ALLOW_UPPER_CASE_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_UPPER_CASE_CHARACTERS;
+use const Pyncer\Snyppet\Content\ALIAS_ALLOW_UNICODE_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_UNICODE_CHARACTERS;
+use const Pyncer\Snyppet\Content\ALIAS_SEPARATOR_CHARACTERS as PYNCER_CONTENT_ALIAS_SEPARATOR_CHARACTERS;
+use const Pyncer\Snyppet\Content\ALIAS_REPLACEMENT_CHARACTER as PYNCER_CONTENT_ALIAS_REPLACEMENT_CHARACTER;
 
 class ContentValidator extends AbstractValidator
 {
@@ -27,9 +27,12 @@ class ContentValidator extends AbstractValidator
 
         $this->addRules(
             'parent_id',
+            new IntRule(
+                minValue: 0,
+                allowNull: true,
+            ),
             new IdRule(
                 mapper: new ContentMapper($this->getConnection()),
-                allowNull: true,
             ),
         );
 
@@ -43,6 +46,7 @@ class ContentValidator extends AbstractValidator
 
         $this->addRules(
             'insert_date_time',
+            new RequiredRule(DateTimeRule::EMPTY),
             new DateTimeRule(),
         );
 
@@ -71,12 +75,12 @@ class ContentValidator extends AbstractValidator
         $this->addRules(
             'alias',
             new AliasRule(
-                allowNumericCharacters: PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS,
-                allowLowerCaseCharacters: PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_LOWER_CASE_CHARACTERS,
-                allowUpperCaseCharacters: PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_UPPER_CASE_CHARACTERS,
-                allowUnicodeCharacters: PYNCER_SNYPPET_CONTENT_ALIAS_ALLOW_UNICODE_CHARACTERS,
-                separatorCharacters: PYNCER_SNYPPET_CONTENT_ALIAS_SEPARATOR_CHARACTERS,
-                replacementCharacter: PYNCER_SNYPPET_CONTENT_ALIAS_REPLACEMENT_CHARACTER,
+                allowNumericCharacters: PYNCER_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS,
+                allowLowerCaseCharacters: PYNCER_CONTENT_ALIAS_ALLOW_LOWER_CASE_CHARACTERS,
+                allowUpperCaseCharacters: PYNCER_CONTENT_ALIAS_ALLOW_UPPER_CASE_CHARACTERS,
+                allowUnicodeCharacters: PYNCER_CONTENT_ALIAS_ALLOW_UNICODE_CHARACTERS,
+                separatorCharacters: PYNCER_CONTENT_ALIAS_SEPARATOR_CHARACTERS,
+                replacementCharacter: PYNCER_CONTENT_ALIAS_REPLACEMENT_CHARACTER,
             ),
             new StringRule(
                 maxLength: 125,

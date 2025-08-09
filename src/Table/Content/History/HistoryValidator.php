@@ -48,6 +48,7 @@ class HistoryValidator extends AbstractValidator
 
         $this->addRules(
             'insert_date_time',
+            new RequiredRule(DateTimeRule::EMPTY),
             new DateTimeRule(),
         );
 
