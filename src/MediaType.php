@@ -36,6 +36,7 @@ enum MediaType: string
     case NUMBERS = 'application/vnd.apple.numbers';
     case KEYNOTE = 'application/vnd.apple.keynote';
     case TXT = 'text/plain';
+    case CSV = 'text/csv';
 
     // Archives
     case ZIP = 'application/zip';
@@ -80,6 +81,7 @@ enum MediaType: string
         'application/vnd.apple.numbers' => 'numbers',
         'application/vnd.apple.keynote' => 'keynote',
         'text/plain' => 'txt',
+        'text/csv' => 'csv',
 
         // Archives
         'application/zip' => 'zip',
@@ -100,40 +102,70 @@ enum MediaType: string
 
     public function isImageMediaType(): bool
     {
-        return in_array($tihs->value, [
+        return in_array($tihs->value, self::getImageMediaTypes());
+    }
+
+    public function isVideoMediaType(): bool
+    {
+        return in_array($tihs->value, self::getVideoMediaTypes());
+    }
+
+    public function isAudioMediaType(): bool
+    {
+        return in_array($tihs->value, self::getAudioMediaTypes());
+    }
+
+    public function isDocumentMediaType(): bool
+    {
+        return in_array($tihs->value, self::getDocumentMediaTypes());
+    }
+
+    public function isArchiveMediaType(): bool
+    {
+        return in_array($tihs->value, self::getArchiveMediaTypes());
+    }
+
+    public function getExtension(): string
+    {
+        return self::EXTENSIONS[$this->value];
+    }
+
+    public static function getImageMediaTypes(): array
+    {
+        return [
             'image/jpeg',
             'image/png',
             'image/gif',
             'image/webp',
             'image/avif',
             'image/svg+xml',
-        ]);
+        ];
     }
 
-    public function isVideoMediaType(): bool
+    public static function getVideoMediaTypes(): array
     {
-        return in_array($tihs->value, [
+        return [
             'video/mp4',
             'video/x-matroska',
             'video/ogg',
             'video/webm',
-        ]);
+        ];
     }
 
-    public function isAudioMediaType(): bool
+    public static function getAudioMediaTypes(): array
     {
-        return in_array($tihs->value, [
+        return [
             'audio/mpeg',
             'audio/wav',
             'audio/aac',
             'audio/ogg',
             'audio/flac',
-        ]);
+        ];
     }
 
-    public function isDocumentMediaType(): bool
+    public static function getDocumentMediaTypes(): array
     {
-        return in_array($tihs->value, [
+        return [
             'application/pdf',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -145,22 +177,18 @@ enum MediaType: string
             'application/vnd.apple.numbers',
             'application/vnd.apple.keynote',
             'text/plain',
-        ]);
+            'text/csv',
+        ];
     }
 
-    public function isArchiveMediaType(): bool
+    public function getArchiveMediaTypes(): array
     {
-        return in_array($tihs->value, [
+        return [
             'application/zip',
             'application/x-rar-compressed',
             'application/x-7z-compressed',
             'application/x-tar',
             'application/gzip',
-        ]);
-    }
-
-    public function getExtension(): string
-    {
-        return self::EXTENSIONS[$this->value];
+        ];
     }
 }
