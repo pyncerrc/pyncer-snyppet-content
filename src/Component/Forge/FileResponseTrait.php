@@ -15,13 +15,13 @@ use const FILTER_VALIDATE_URL;
 
 trait FileResponseTrait
 {
-
     protected function getFileResponse(
         string $filename,
         string $uri,
+        bool $deleteFile = false,
     ): PsrResponseInterface
     {
-        if (filter_var($uri, FILTER_VALIDATE_URL) !== false) {
+        if (filter_var($uri, FILTER_VALIDATE_URL) !== false && !$deleteFile) {
             return (new Response(Status::REDIRECTION_302_FOUND))
                 ->withHeader('Location', $uri);
         }
@@ -29,15 +29,24 @@ trait FileResponseTrait
         if (PYNCER_SNYPPET_CONTENT_FILE_METHOD === FileMethod::ACCEL_REDIRECT) {
             return (new Response(Status::SUCCESS_200_OK))
                 ->withHeader('X-Accel-Redirect', $uri);
+
+            if ($deleteFile) {
+                unlink($uri);
+            }
         }
 
         if (PYNCER_SNYPPET_CONTENT_FILE_METHOD === FileMethod::SENDFILE) {
             return (new Response(Status::SUCCESS_200_OK))
                 ->withHeader('X-Sendfile', $uri);
+
+            if ($deleteFile) {
+                unlink($uri);
+            }
         }
 
         $fileStream = new FileStream($uri);
         $fileStream->setUseReadFile(true);
+        $fileStream->setDeleteFile($deleteFile);
 
         $response = new Response(
             status: Status::SUCCESS_200_OK,
