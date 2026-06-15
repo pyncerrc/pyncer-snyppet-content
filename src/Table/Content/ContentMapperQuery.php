@@ -1,41 +1,58 @@
 <?php
 namespace Pyncer\Snyppet\Content\Table\Content;
 
-use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Data\MapperQuery\AbstractRequestMapperQuery;
 use Pyncer\Data\Model\ModelInterface;
 use Pyncer\Database\ConnectionInterface;
 use Pyncer\Database\Record\SelectQueryInterface;
 
+use function Pyncer\Array\unset_keys as pyncer_array_unset_keys;
+
 class ContentMapperQuery extends AbstractRequestMapperQuery
 {
-    protected bool $includeData = false;
-    protected bool $includeValues = false;
-
     public function overrideModel(
         ModelInterface $model,
         array $data,
     ): ModelInterface
     {
-        if ($this->includeData) {
-
+        if (!$this->getOptions()) {
+            return $model;
         }
 
-        if ($this->includeValues) {
+        if ($this->getOptions()->hasOption('include-content-values')) {
+            $result = $this->getConnection()->select('content__value')
+                ->columns('key', 'value')
+                ->where(['content_id' => $model->getId()])
+                ->result();
 
+            $extraData = [];
+            foreach ($result as $row) {
+                $extraData[$row['key']] = $row['value'];
+            }
+
+            $extraData = pyncer_array_unset_keys($extraData, $model->getKeys());
+            $model->addExtraData($extraData);
+        }
+
+        if ($this->getOptions()->hasOption('include-content-data')) {
+            $result = $this->getConnection()->select('content__data')
+                ->columns('key', 'type', 'value')
+                ->where(['content_id' => $model->getId()])
+                ->result();
+
+            $extraData = [];
+            foreach ($result as $row) {
+                $extraData[$row['key']] = [
+                    'type' => $row['type'],
+                    'value' => $row['value'],
+                ];
+            }
+
+            $extraData = pyncer_array_unset_keys($extraData, $model->getKeys());
+            $model->addExtraData($extraData);
         }
 
         return $model;
-    }
-
-    public function overrideQuery(
-        SelectQueryInterface $query
-    ): SelectQueryInterface
-    {
-        $this->includeData = false;
-        $this->includeValues = false;
-
-        return parent::overrideQuery($query);
     }
 
     protected function isValidFilter(
@@ -44,15 +61,31 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         string $operator,
     ): bool
     {
-        if ($left === 'enabled' && is_bool($right) && $operator === '=') {
+        if ($left === 'uid' &&
+            is_string($right) &&
+            ($operator === '=' || $operator === '!=')
+        ) {
             return true;
         }
 
-        if ($left === 'deleted' && is_bool($right) && $operator === '=') {
+        if ($left === 'enabled' &&
+            is_bool($right) &&
+            ($operator === '=' || $operator === '!=')
+        ) {
             return true;
         }
 
-        if ($left === 'type' && is_string($right) && ($operator === '=' || $operator === '!=')) {
+        if ($left === 'deleted' &&
+            is_bool($right) &&
+            ($operator === '=' || $operator === '!=')
+        ) {
+            return true;
+        }
+
+        if ($left === 'type' &&
+            is_string($right) &&
+            ($operator === '=' || $operator === '!=')
+        ) {
             return true;
         }
 

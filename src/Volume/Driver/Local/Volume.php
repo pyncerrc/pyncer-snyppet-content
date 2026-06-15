@@ -3,7 +3,6 @@ namespace Pyncer\Snyppet\Content\Volume\Driver\Local;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Pyncer\Http\Message\Uri;
-use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Snyppet\Content\Volume\AbstractVolume;
 use Pyncer\Snyppet\Content\Volume\DirType;
 use Pyncer\Snyppet\Content\Volume\Exception\VolumeException;

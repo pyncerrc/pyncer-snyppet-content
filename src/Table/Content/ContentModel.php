@@ -5,12 +5,23 @@ use DateTime;
 use DateTimeInterface;
 use Pyncer\Data\Model\AbstractModel;
 
+use function Pyncer\uid as pyncer_uid;
 use function Pyncer\date_time as pyncer_date_time;
 
 use const Pyncer\DATE_TIME_FORMAT as PYNCER_DATE_TIME_FORMAT;
 
 class ContentModel extends AbstractModel
 {
+    public function getUid(): string
+    {
+        return $this->get('uid');
+    }
+    public function setUid(string $value): static
+    {
+        $this->set('uid', $value);
+        return $this;
+    }
+
     public function getParentId(): ?int
     {
         return $this->get('parent_id');
@@ -175,6 +186,7 @@ class ContentModel extends AbstractModel
 
         return [
             'id' => 0,
+            'uid' => pyncer_uid(),
             'parent_id' => null,
             'volume_id' => null,
             'mark' => null,

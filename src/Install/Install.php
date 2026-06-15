@@ -17,6 +17,7 @@ class Install extends AbstractInstall
     {
         $this->connection->createTable('content')
             ->serial('id')
+            ->char('uid', 36)->index()
             ->int('parent_id', IntSize::BIG)->null()->index()
             ->int('volume_id', IntSize::BIG)->null()->index()
             ->string('mark', 250)->null()->index()
@@ -32,6 +33,7 @@ class Install extends AbstractInstall
             ->int('iteration')->null()
             ->bool('enabled')->default(false)->index()
             ->bool('deleted')->default(false)->index()
+            ->index('#unique', 'uid')->unique()
             ->foreignKey(null, 'parent_id')
                 ->references('content', 'id')
                 ->deleteAction(ReferentialAction::CASCADE)

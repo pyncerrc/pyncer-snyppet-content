@@ -28,4 +28,12 @@ class ContentMapper extends AbstractMapper
     {
         return ($mapperQuery instanceof ContentMapperQuery);
     }
+
+    public function selectByUid(
+        string $uid,
+        ?MapperQueryInterface $mapperQuery = null
+    ): ?ModelInterface
+    {
+        return $this->selectByColumns(['uid' => $uid], $mapperQuery);
+    }
 }
