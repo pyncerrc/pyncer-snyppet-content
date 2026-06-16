@@ -11,6 +11,7 @@ use Pyncer\Validation\Rule\IdRule;
 use Pyncer\Validation\Rule\IntRule;
 use Pyncer\Validation\Rule\RequiredRule;
 use Pyncer\Validation\Rule\StringRule;
+use Pyncer\Validation\Rule\UidRule;
 
 use const Pyncer\Snyppet\Content\ALIAS_ALLOW_NUMERIC_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_NUMERIC_CHARACTERS;
 use const Pyncer\Snyppet\Content\ALIAS_ALLOW_LOWER_CASE_CHARACTERS as PYNCER_CONTENT_ALIAS_ALLOW_LOWER_CASE_CHARACTERS;
@@ -24,6 +25,15 @@ class ContentValidator extends AbstractValidator
     public function __construct(ConnectionInterface $connection)
     {
         parent::__construct($connection);
+
+        $this->addRules(
+            'uid',
+            new RequiredRule(UidRule::EMPTY),
+            new UidRule(),
+            new StringRule(
+                maxLength: 36,
+            ),
+        );
 
         $this->addRules(
             'parent_id',
