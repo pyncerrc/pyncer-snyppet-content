@@ -68,6 +68,13 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
             return true;
         }
 
+        if ($left === 'parent_id' &&
+            is_int($right) &&
+            $operator === '='
+        ) {
+            return true;
+        }
+
         if ($left === 'enabled' &&
             is_bool($right) &&
             ($operator === '=' || $operator === '!=')
@@ -83,6 +90,13 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         }
 
         if ($left === 'type' &&
+            is_string($right) &&
+            ($operator === '=' || $operator === '!=')
+        ) {
+            return true;
+        }
+
+        if ($left === 'alias' &&
             is_string($right) &&
             ($operator === '=' || $operator === '!=')
         ) {
