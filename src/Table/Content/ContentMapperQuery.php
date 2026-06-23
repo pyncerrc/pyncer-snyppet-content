@@ -170,7 +170,7 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         switch ($key) {
             case 'update_date_time':
                 $function = $this->getConnection()->functions(
-                    'contact',
+                    'content',
                     'Coalesce'
                 )->arguments('update_date_time', 'insert_date_time');
                 return [$function, $direction];
