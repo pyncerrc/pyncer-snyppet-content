@@ -132,6 +132,8 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
     protected function isValidOrderBy(string $key, string $direction): bool
     {
         switch ($key) {
+            case 'insert_date_time':
+            case 'update_date_time':
             case 'order':
             case 'alias':
             case 'filename':
@@ -151,9 +153,16 @@ class ContentMapperQuery extends AbstractRequestMapperQuery
         $direction
     ): array
     {
-        if ($key === 'random') {
-            $connection = $query->getDatabase();
-            return ['@', $connection->functions($query->getTable(), 'Rand'), $direction];
+        switch ($key) {
+            case 'update_date_time':
+                $function = $this->getConnection()->functions(
+                    'contact',
+                    'Coalesce'
+                )->arguments('update_date_time', 'insert_date_time');
+                return [$function, $direction];
+            case 'random':
+                $connection = $query->getDatabase();
+                return ['@', $connection->functions($query->getTable(), 'Rand'), $direction];
         }
 
         return parent::getOrderByColumn($query, $key, $direction);
