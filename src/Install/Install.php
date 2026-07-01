@@ -316,6 +316,7 @@ class Install extends AbstractInstall
     {
         switch ($snyppetAlias) {
             case 'config':
+            case 'organization':
                 return true;
         }
 
@@ -325,11 +326,13 @@ class Install extends AbstractInstall
     /**
      * @inheritdoc
      */
-    public function installRelated(string $snyppetAlias): bool
+    public function safeInstallRelated(string $snyppetAlias): bool
     {
         switch ($snyppetAlias) {
             case 'config':
                 return $this->installConfig();
+            case 'organization':
+                return $this->installOrganization();
         }
 
         return false;
@@ -338,11 +341,13 @@ class Install extends AbstractInstall
     /**
      * @inheritdoc
      */
-    public function uninstallRelated(string $snyppetAlias): bool
+    public function safeUninstallRelated(string $snyppetAlias): bool
     {
         switch ($snyppetAlias) {
             case 'config':
-                return $this->installConfig();
+                return $this->uninstallConfig();
+            case 'organization':
+                return $this->uninstallOrganization();
         }
 
         return false;
@@ -368,6 +373,35 @@ class Install extends AbstractInstall
         if (!$config->has('content_placeholder_image_id')) {
             $config->set('content_placeholder_image_id', null);
             $config->save('content_placeholder_image_id');
+        }
+
+        return true;
+    }
+
+    protected function installOrganization(): bool
+    {
+        $this->connection->createTable('content__organization')
+            ->serial('id')
+            ->int('content_id', IntSize::BIG)->index()
+            ->int('organization_id', IntSize::BIG)->index()
+            ->index('#unique', 'content_id')->unique()
+            ->foreignKey(null, 'content_id')
+                ->references('content', 'id')
+                ->deleteAction(ReferentialAction::CASCADE)
+                ->updateAction(ReferentialAction::CASCADE)
+            ->foreignKey(null, 'organization_id')
+                ->references('organization', 'id')
+                ->deleteAction(ReferentialAction::CASCADE)
+                ->updateAction(ReferentialAction::CASCADE)
+            ->execute();
+
+        return true;
+    }
+
+    protected function uninstallOrganization(): bool
+    {
+        if ($this->connection->hasTable('content__organization')) {
+            $this->connection->dropTable('content__organization');
         }
 
         return true;
