@@ -3,6 +3,7 @@ namespace Pyncer\Snyppet\Content\Table\Content\History;
 
 use Pyncer\Snyppet\Content\Table\Content\History\DataModel;
 use Pyncer\Data\Mapper\AbstractMapper;
+use Pyncer\Data\Mapper\MapperResultInterface;
 use Pyncer\Data\Model\ModelInterface;
 
 class DataMapper extends AbstractMapper

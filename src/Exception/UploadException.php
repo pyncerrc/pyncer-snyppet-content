@@ -22,7 +22,7 @@ class UploadException extends RuntimeException
         $this->error = $error;
     }
 
-    public function getError(): int|string
+    public function getError(): string
     {
         return $this->error;
     }
