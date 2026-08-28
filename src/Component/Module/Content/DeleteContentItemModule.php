@@ -6,6 +6,7 @@ use Pyncer\Component\Module\AbstractDeleteItemModule;
 use Pyncer\Data\Mapper\MapperInterface;
 use Pyncer\Data\MapperQuery\MapperQueryInterface;
 use Pyncer\Data\Model\ModelInterface;
+use Pyncer\Database\Exception\QueryException;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapperQuery;
 use Pyncer\Snyppet\Utility\Component\SoftDeleteTrait;

@@ -2,6 +2,7 @@
 namespace Pyncer\Snyppet\Content\Component\Forge;
 
 use Pyncer\App\Identifier as ID;
+use Pyncer\Exception\InvalidArgumentException;
 use Pyncer\Snyppet\Content\Table\Content\ContentMapper;
 use Pyncer\Snyppet\Content\Table\Content\ContentModel;
 use Pyncer\Validation\Rule\AliasRule;
@@ -65,6 +66,7 @@ trait DirTrait
                     'name' => $value,
                     'enabled' => true,
                 ]);
+
                 $mapper->insert($contentModel);
 
                 $parentId = $contentModel->getId();
